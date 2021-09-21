@@ -1,0 +1,27 @@
+
+/* alterar basicamente tudo */
+body{
+    
+    background-color: rgb(26, 26, 26);
+    color:rgb(103, 170, 86);
+}
+/* mudar os links */
+a{
+    text-decoration: none;
+    color:rgb(103, 170, 86);
+    background-color: white;
+}
+/* mudar botões */
+button{
+    background-color: rgb(189, 189, 189);
+    border-left:none;
+    border-top: none;
+    border-right:none;
+    border-bottom: solid 3px rgb(180, 180, 180);
+    font-size: large;
+}
+/* mudar o efeito dos botões */
+button:hover{
+    border-bottom: none;
+    margin-top:3px;
+}
