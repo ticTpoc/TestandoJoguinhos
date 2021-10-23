@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Joguinhos</title>
+    <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+ 
+
+
+ <div class="dungeon center"> 
+     <div class="jogo">
+        <div id="legenda" class="center">
+            <div id="vida"> <p id="vida"> Vida</p></div>
+          <div id="etapa"> <p id = "etapa">Etapa</p></div>
+          
+        </div>
+       <div id="inimigo" class="center">
+           <p id="textoInimigo" class="hide"></p>
+       </div>
+       <div id="iniciar" class="center">
+           <button id="botaoIniciar"> Iniciar </button>
+          
+       </div>  
+       <div  id="legenda" class="center"> 
+           <p id="nomeInimigo">Nome</p>
+        <p id="infoInimigo"> Informações foda </p>
+       </div>
+       <div id="acoes" class="center"> 
+       <button id="atacar">Atacar</button>
+       <button id="fugir">Fugir</button>
+       <button id="defender">Defender</button>
+       </div>
+     </div>
+     
+ </div>
+ <div class="inventario center">
+    <div class="center">
+        <table class="tabela" >
+<div >
+    <tr class="espadas"><td><img id="espadabosta" class = " espada tabela" onclick="selecionarEspada('espadabosta')"  valor="2" src="imagens/itens/espadabosta.png"></td>
+        <td ><img  id="espadaferro"  class = "espada tabela" onclick="selecionarEspada('espadaferro')" valor="4"   src="imagens/itens/espadaferro.png"></td>
+        <td  ><img id="espadaouro" class = "espada tabela" onclick="selecionarEspada('espadaouro')" valor="8"  src="imagens/itens/espadaouro.png"></td></tr>
+    </div>           
+            
+    <tr><td><img id="escudobosta" class = "tabela escudo" onclick="selecionarEscudo('escudobosta')" valor="10"   src="imagens/itens/escudobosta.png"></td>
+        <td><img  id="escudoheroi" class = "tabela escudo" onclick="selecionarEscudo('escudoheroi')" valor="20" src="imagens/itens/escudoheroi.png"></td>
+        <td><img  id="escudolendario" class = "tabela escudo" onclick="selecionarEscudo('escudolendario')" valor="30"  src="imagens/itens/escudolendario.png"></td></tr>
+            
+        </table>
+    </div>
+       <div></div>
+
+    </div>
+<script type="text/javascript">
+
+// funções
+
+function randomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  
+function criarInimigo(mob){
+    var inimigo = document.createElement("img");
+inimigo.setAttribute('src', "imagens/inimigos/"+mob);
+inimigo.setAttribute('height', '300px');
+inimigo.setAttribute('alt',mob);
+inimigo.setAttribute('id', 'atual');
+inimigo.setAttribute('width', '300px');
+const divInimigo= document.getElementById('inimigo');
+divInimigo.appendChild(inimigo);
+}
+
+function criarRodada(nivel){
+    for(var i=0; i<nivel; i++){
+var selecao = randomInt(0, inimigos.mobs.length);
+rodada.push(inimigos.mobs[selecao]);
+}
+}
+
+function iniciarJogo(){
+
+    textoInimigo.classList.add('hide');
+    infoVida.innerHTML = "vida:"+vida;
+    divAtacar.classList.remove('hide');
+divFugir.classList.remove('hide');
+divDefender.classList.remove('hide');
+   iniciar.classList.add('hide');
+   criarRodada(10);
+   console.log(rodada);
+   criarInimigo(rodada[etapa]);
+   
+   var inimigoAtual = document.getElementById('atual');
+   var mobAtual = inimigoAtual.getAttribute('alt');
+   infoInimigo.innerHTML = "vida:"+pegarVida(mobAtual);
+   nomeInimigo.innerHTML = "nome:"+mobAtual.replace('.png','');
+   infoEtapa.innerHTML = "etapa:"+etapa;
+ 
+
+
+}
+
+function reiniciarJogo(){
+    vida = vidamaxima;
+    
+    const inimigoAtual = document.getElementById('atual');
+    ataques= 0;
+    etapa = 0;
+    vidaAtualInimigo = null;
+    rodada = [];
+    divInimigo.removeChild(inimigoAtual);
+    iniciar.classList.remove('hide');
+    divAtacar.classList.add('hide');
+    divFugir.classList.add('hide');
+    iniciar.textContent= "reiniciar";
+    criarRodada(10);
+
+}
+
+function selecionarEspada(valor){
+
+const espadas = document.querySelectorAll(".espada");
+for (var i = 0; i < espadas.length; i++) {
+    espadas[i].classList.remove('highlight');
+    
+}
+var espadaAtual = document.getElementById(valor);
+ataque = espadaAtual.getAttribute('valor');
+    espadaAtual.classList.add('highlight');
+
+}
+function selecionarEscudo(valor){
+
+const escudos = document.querySelectorAll(".escudo");
+for (var i = 0; i < escudos.length; i++) {
+escudos[i].classList.remove('highlight');
+}
+var escudoAtual = document.getElementById(valor);
+console.log(escudoAtual.getAttribute('valor'));
+escudoAtual.classList.add('highlight');
+
+}
+
+function pegarNome(mob){
+    for(var i=0; i<inimigos.mobs.length; i++){
+ 
+    if(inimigos.mobs[i]==mob){
+        vidaInimigo = inimigos.vidas[i];
+       
+        return vidaInimigo;
+    }
+    }
+}
+
+function pegarVida(mob){
+    for(var i=0; i<inimigos.mobs.length; i++){
+ 
+    if(inimigos.mobs[i]==mob){
+        vidaInimigo = inimigos.vidas[i];
+       
+        return vidaInimigo;
+    }
+    }
+}
+
+function pegarDanoMinimo(mob){
+    for(var i=0; i<inimigos.mobs.length; i++){
+ 
+    if(inimigos.mobs[i]==mob){
+        dano = inimigos.danomin[i];
+       
+        return dano;
+    }
+    }
+}
+function pegarDanoMaximo(mob){
+    for(var i=0; i<inimigos.mobs.length; i++){
+ 
+    if(inimigos.mobs[i]==mob){
+        dano = inimigos.danomax[i];
+       
+        return dano;
+    }
+    }
+}
+
+
+
+function morrer(mob){
+    const textoInimigo = document.getElementById('textoInimigo');
+    textoInimigo.classList.remove('hide');
+    textoInimigo.innerHTML= "você morreu para "+mob.replace('.png','');
+    reiniciarJogo();
+}
+
+function matar(){
+
+
+   ataques = 0;
+    etapa++;
+    infoEtapa.innerHTML = "etapa:"+etapa;
+   
+  
+
+    var inimigoAtual = document.getElementById('atual');
+    divInimigo.removeChild(inimigoAtual);
+    
+    criarInimigo(rodada[etapa]);
+    var inimigoAtual = document.getElementById('atual');
+    var mobAtual = inimigoAtual.getAttribute('alt');
+ 
+    var vidaInimigo = pegarVida(mobAtual);
+    infoInimigo.innerHTML = "vida:"+vidaInimigo;
+    nomeInimigo.innerHTML = "nome:"+mobAtual.replace('.png','');
+    
+}
+
+function atacar(){
+
+
+    var inimigoAtual = document.getElementById('atual');
+    var mobAtual = inimigoAtual.getAttribute('alt');
+    var vidaInimigo = pegarVida(mobAtual);
+    var danoDado = 0;
+
+    ataques++;
+    console.log(ataque);
+
+    danoDado= ataque * ataques;
+    var vidaAtualInimigo = vidaInimigo - danoDado;
+
+console.log("vida inimigo"+vidaAtualInimigo);
+   
+    infoInimigo.innerHTML = "vida:"+vidaAtualInimigo;
+    
+
+    if(etapa==rodada.length){
+    divAtacar.classList.add('hide');
+    }
+
+    if(vidaAtualInimigo<=0){
+        console.log("morreu");
+        matar();
+
+        
+    }
+
+   
+
+    danoInimigo= randomInt(pegarDanoMinimo(mobAtual),pegarDanoMaximo(mobAtual));
+    console.log("Dano do Inimigo"+danoInimigo);
+    vida = vida - danoInimigo;
+
+    if(vida<=0){
+
+       morrer(mobAtual);
+    }
+    infoVida.innerHTML = "vida:"+vida;
+
+}
+function fugir(){
+
+var inimigoAtual = document.getElementById('atual');
+var mobAtual = inimigoAtual.getAttribute('alt');
+var vidaInimigo = pegarVida(mobAtual);
+
+var fuga = randomInt(1,3);
+console.log(fuga);
+if(fuga==2){
+    matar();
+}else{
+    morrer(mobAtual);
+}
+
+
+
+
+if(vida<=0){
+
+   morrer(mobAtual);
+}
+
+
+}
+// variaveis e constantes
+
+
+
+const infoInimigo = document.getElementById('infoInimigo');
+const textoInimigo = document.getElementById('textoInimigo');
+const iniciar= document.getElementById('botaoIniciar');
+const divLegenda = document.getElementById('legenda');
+const divAtacar = document.getElementById('atacar');
+const divFugir = document.getElementById('fugir');
+const divDefender = document.getElementById('defender');
+const divAcoes = document.getElementById('acoes');
+const divInimigo = document.getElementById('inimigo');
+const nomeInimigo = document.getElementById('nomeInimigo');
+const infoVida= document.getElementById('vida');
+const infoEtapa= document.getElementById('etapa');
+
+
+
+
+const inimigos= { mobs:["goblin.png","orc.png","dragao.png","kevin.png"], danomin:[0,1,3,1],danomax:[1,3,5,20], vidas:[1,2,3,3]}
+
+const vidamaxima = 100;
+
+var vida = 100;
+
+var danoInimigo = null;
+
+var etapa = 0;
+
+var selecao = randomInt(0, inimigos.mobs.length);
+
+var  ataques = 0;
+
+var ataque = 1;
+
+var rodada = [];
+
+
+
+
+  
+// jogo 
+divAtacar.classList.add('hide');
+divFugir.classList.add('hide');
+divDefender.classList.add('hide');
+
+
+
+
+//botôes
+
+iniciar.addEventListener('click', iniciarJogo);
+divAtacar.addEventListener('click', atacar);
+divFugir.addEventListener('click', fugir);
+
+
+// extras para casos de emergencia
+
+
+/*
+const espadabosta = document.getElementById('espadabosta');
+const espadaferro = document.getElementById('espadaferro');
+const espadaouro = document.getElementById('espadaouro');
+const escudobosta = document.getElementById('escudobosta');
+const escudoheroi = document.getElementById('escudoheroi');
+const escudolendario = document.getElementById('escudolendario');*/
+
+</script>
+
+</body>
+</html>

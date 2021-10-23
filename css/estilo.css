@@ -25,3 +25,43 @@ button:hover{
     border-bottom: none;
     margin-top:3px;
 }
+
+.center {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    padding: 10px;
+    }
+
+.dungeon{
+    border: 6px solid rgb(248, 248, 248);
+ 
+}
+
+.hide{
+    display: none;
+}
+
+div#vida{
+    float:left;
+    width: 50%;
+}
+
+div#etapa{
+    float:right;
+    width: 50%;
+}
+
+td, tr{
+    padding: 10px;
+   border: 2px solid rgb(168, 25, 25);  
+}
+
+img.tabela{
+    height:100px;
+    width: 100px;
+}
+
+img.highlight{
+    border: 4px solid yellow;
+}
