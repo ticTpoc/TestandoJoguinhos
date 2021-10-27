@@ -10,15 +10,39 @@
 
 
  <div class="dungeon center"> 
-     <div class="jogo">
+
+    <div id="inventario" class="inventario center">
+        <div>
+            <table class="tabela center" >
+    <div >
+        <tr class="espadas"><td><img id="espadabosta" class = " espada tabela" onclick="selecionarEspada('espadabosta')"  valor="2" src="imagens/itens/espadabosta.png"></td>
+            <td ><img  id="espadaferro"  class = "espada tabela" onclick="selecionarEspada('espadaferro')" valor="4"   src="imagens/itens/espadaferro.png"></td>
+            <td  ><img id="espadaouro" class = "espada tabela" onclick="selecionarEspada('espadaouro')" valor="8"  src="imagens/itens/espadaouro.png"></td></tr>
+        </div>           
+                
+        <tr><td><img id="escudobosta" class = "tabela escudo" onclick="selecionarEscudo('escudobosta')" valor="10"   src="imagens/itens/escudobosta.png"></td>
+            <td><img  id="escudoheroi" class = "tabela escudo" onclick="selecionarEscudo('escudoheroi')" valor="20" src="imagens/itens/escudoheroi.png"></td>
+            <td><img  id="escudolendario" class = "tabela escudo" onclick="selecionarEscudo('escudolendario')" valor="30"  src="imagens/itens/escudolendario.png"></td></tr>
+                
+            </table>
+        </div>
+    </div>
+        
+
+     <div id="jogo" class="jogo hide">
         <div id="legenda" class="center">
             <div id="vida"> <p id="vida"> Vida</p></div>
           <div id="etapa"> <p id = "etapa">Etapa</p></div>
+          <div id="nivel"> <p id = "nivel">nivel</p></div>
           
         </div>
-       <div id="inimigo" class="center">
+       <div id="inimigo" class="center ataques">
+          
            <p id="textoInimigo" class="hide"></p>
-       </div>
+           <div id='ataques'>
+            </div>
+    </div>
+    
        <div id="iniciar" class="center">
            <button id="botaoIniciar"> Iniciar </button>
           
@@ -30,32 +54,33 @@
        <div id="acoes" class="center"> 
        <button id="atacar">Atacar</button>
        <button id="fugir">Fugir</button>
-       <button id="defender">Defender</button>
+       <button id="defender">Defender</button><button id='textoDefender' class="hide"></button>
        </div>
      </div>
      
- </div>
- <div class="inventario center">
-    <div class="center">
-        <table class="tabela" >
-<div >
-    <tr class="espadas"><td><img id="espadabosta" class = " espada tabela" onclick="selecionarEspada('espadabosta')"  valor="2" src="imagens/itens/espadabosta.png"></td>
-        <td ><img  id="espadaferro"  class = "espada tabela" onclick="selecionarEspada('espadaferro')" valor="4"   src="imagens/itens/espadaferro.png"></td>
-        <td  ><img id="espadaouro" class = "espada tabela" onclick="selecionarEspada('espadaouro')" valor="8"  src="imagens/itens/espadaouro.png"></td></tr>
-    </div>           
-            
-    <tr><td><img id="escudobosta" class = "tabela escudo" onclick="selecionarEscudo('escudobosta')" valor="10"   src="imagens/itens/escudobosta.png"></td>
-        <td><img  id="escudoheroi" class = "tabela escudo" onclick="selecionarEscudo('escudoheroi')" valor="20" src="imagens/itens/escudoheroi.png"></td>
-        <td><img  id="escudolendario" class = "tabela escudo" onclick="selecionarEscudo('escudolendario')" valor="30"  src="imagens/itens/escudolendario.png"></td></tr>
-            
-        </table>
-    </div>
-       <div></div>
 
+ 
+       
     </div>
 <script type="text/javascript">
 
 // funções
+function add_img() { 
+	var img = document.createElement('img'); 
+    img.src = 'imagens/animacao/ataque.gif'; 
+    img.id='ataque';
+    img.classList.add('absoluta');
+    console.log("ataque feito");
+	document.getElementById('inimigo').appendChild(img);
+}
+
+function remove_img(){
+
+    console.log("ataque removido");
+    var img = document.getElementById("ataque");
+  
+  img.parentNode.removeChild(img);
+}
 
 function randomInt(min, max) {
     min = Math.ceil(min);
@@ -70,6 +95,7 @@ inimigo.setAttribute('src', "imagens/inimigos/"+mob);
 inimigo.setAttribute('height', '300px');
 inimigo.setAttribute('alt',mob);
 inimigo.setAttribute('id', 'atual');
+inimigo.setAttribute('class', 'relativa');
 inimigo.setAttribute('width', '300px');
 const divInimigo= document.getElementById('inimigo');
 divInimigo.appendChild(inimigo);
@@ -84,14 +110,19 @@ rodada.push(inimigos.mobs[selecao]);
 
 function iniciarJogo(){
 
+if(document.getElementById("ataque")!=null){
+    remove_img();
+}
+
+    vida = vidamaxima;
     textoInimigo.classList.add('hide');
     infoVida.innerHTML = "vida:"+vida;
     divAtacar.classList.remove('hide');
 divFugir.classList.remove('hide');
 divDefender.classList.remove('hide');
    iniciar.classList.add('hide');
-   criarRodada(10);
-   console.log(rodada);
+   criarRodada(nivel);
+ 
    criarInimigo(rodada[etapa]);
    
    var inimigoAtual = document.getElementById('atual');
@@ -99,14 +130,16 @@ divDefender.classList.remove('hide');
    infoInimigo.innerHTML = "vida:"+pegarVida(mobAtual);
    nomeInimigo.innerHTML = "nome:"+mobAtual.replace('.png','');
    infoEtapa.innerHTML = "etapa:"+etapa;
+   infoNivel.innerHTML = "nivel:"+nivel;
  
 
+
+    
 
 }
 
 function reiniciarJogo(){
-    vida = vidamaxima;
-    
+
     const inimigoAtual = document.getElementById('atual');
     ataques= 0;
     etapa = 0;
@@ -117,7 +150,10 @@ function reiniciarJogo(){
     divAtacar.classList.add('hide');
     divFugir.classList.add('hide');
     iniciar.textContent= "reiniciar";
-    criarRodada(10);
+
+}
+function selecionar(){
+
 
 }
 
@@ -132,7 +168,16 @@ var espadaAtual = document.getElementById(valor);
 ataque = espadaAtual.getAttribute('valor');
     espadaAtual.classList.add('highlight');
 
+    console.log(ataque);
+
+    if((escudo!=0)&&(ataque!=1)){
+        document.getElementById('jogo').classList.remove('hide');
+        document.getElementById('inventario').classList.add('hide');
+
 }
+
+}
+
 function selecionarEscudo(valor){
 
 const escudos = document.querySelectorAll(".escudo");
@@ -140,8 +185,15 @@ for (var i = 0; i < escudos.length; i++) {
 escudos[i].classList.remove('highlight');
 }
 var escudoAtual = document.getElementById(valor);
-console.log(escudoAtual.getAttribute('valor'));
+
+escudo = escudoAtual.getAttribute('valor');
 escudoAtual.classList.add('highlight');
+
+if((escudo!=0)&&(ataque!=1)){
+   document.getElementById('jogo').classList.remove('hide');
+   document.getElementById('inventario').classList.add('hide');
+}
+
 
 }
 
@@ -188,7 +240,13 @@ function pegarDanoMaximo(mob){
     }
 }
 
+function ganhar(){
 
+    
+    nivel++;
+    reiniciarJogo();
+
+}
 
 function morrer(mob){
     const textoInimigo = document.getElementById('textoInimigo');
@@ -199,7 +257,7 @@ function morrer(mob){
 
 function matar(){
 
-
+    
    ataques = 0;
     etapa++;
     infoEtapa.innerHTML = "etapa:"+etapa;
@@ -216,10 +274,19 @@ function matar(){
     var vidaInimigo = pegarVida(mobAtual);
     infoInimigo.innerHTML = "vida:"+vidaInimigo;
     nomeInimigo.innerHTML = "nome:"+mobAtual.replace('.png','');
-    
+
+    if(etapa==rodada.length){
+    ganhar();
+    }
+
 }
 
 function atacar(){
+
+    add_img();
+   
+  
+    console.log(rodada.length);
 
 
     var inimigoAtual = document.getElementById('atual');
@@ -228,40 +295,53 @@ function atacar(){
     var danoDado = 0;
 
     ataques++;
-    console.log(ataque);
 
     danoDado= ataque * ataques;
     var vidaAtualInimigo = vidaInimigo - danoDado;
-
-console.log("vida inimigo"+vidaAtualInimigo);
    
     infoInimigo.innerHTML = "vida:"+vidaAtualInimigo;
-    
 
-    if(etapa==rodada.length){
-    divAtacar.classList.add('hide');
-    }
-
+    setTimeout(function(){ remove_img()}, 1000);
     if(vidaAtualInimigo<=0){
-        console.log("morreu");
-        matar();
 
         
+        matar();
+        
     }
-
-   
-
     danoInimigo= randomInt(pegarDanoMinimo(mobAtual),pegarDanoMaximo(mobAtual));
-    console.log("Dano do Inimigo"+danoInimigo);
-    vida = vida - danoInimigo;
+  
+
+    if((defesa>0)&&(defesa!=null)){
+        defesa = defesa - danoInimigo;
+        textoDefender.innerHTML = defesa;
+
+
+    }else{
+        textoDefender.classList.add('hide');
+
+        vida = vida - danoInimigo;
+    }
+    
 
     if(vida<=0){
 
        morrer(mobAtual);
     }
     infoVida.innerHTML = "vida:"+vida;
+    
+}
+function defender(){
+
+    defesa = escudo;
+    divDefender.classList.add('hide');
+    textoDefender.classList.remove('hide');
+    textoDefender.innerHTML= defesa;
+    textoDefender.style.pointerEvents = "none";
+    
+    
 
 }
+
 function fugir(){
 
 var inimigoAtual = document.getElementById('atual');
@@ -269,15 +349,11 @@ var mobAtual = inimigoAtual.getAttribute('alt');
 var vidaInimigo = pegarVida(mobAtual);
 
 var fuga = randomInt(1,3);
-console.log(fuga);
 if(fuga==2){
     matar();
 }else{
     morrer(mobAtual);
 }
-
-
-
 
 if(vida<=0){
 
@@ -289,7 +365,7 @@ if(vida<=0){
 // variaveis e constantes
 
 
-
+const textoDefender = document.getElementById('textoDefender');
 const infoInimigo = document.getElementById('infoInimigo');
 const textoInimigo = document.getElementById('textoInimigo');
 const iniciar= document.getElementById('botaoIniciar');
@@ -302,15 +378,25 @@ const divInimigo = document.getElementById('inimigo');
 const nomeInimigo = document.getElementById('nomeInimigo');
 const infoVida= document.getElementById('vida');
 const infoEtapa= document.getElementById('etapa');
+const infoNivel = document.getElementById('nivel');
 
 
 
 
-const inimigos= { mobs:["goblin.png","orc.png","dragao.png","kevin.png"], danomin:[0,1,3,1],danomax:[1,3,5,20], vidas:[1,2,3,3]}
+const inimigos= { mobs:["goblin.png","orc.png","dragao.png","kevin.png","ogro.png","elfo.png","unicornio.png"],
+ danomin:[0,2,3,1,1,0,10],
+ danomax:[3,5,6,21,5,2,50],
+ vidas:[2,3,5,7,4,1,13]}
 
 const vidamaxima = 100;
 
 var vida = 100;
+
+var defesa = null;
+
+var escudo = 0;
+
+var nivel = 1;
 
 var danoInimigo = null;
 
@@ -326,21 +412,19 @@ var rodada = [];
 
 
 
-
   
 // jogo 
 divAtacar.classList.add('hide');
 divFugir.classList.add('hide');
 divDefender.classList.add('hide');
 
-
-
-
 //botôes
+
 
 iniciar.addEventListener('click', iniciarJogo);
 divAtacar.addEventListener('click', atacar);
 divFugir.addEventListener('click', fugir);
+divDefender.addEventListener('click', defender);
 
 
 // extras para casos de emergencia
