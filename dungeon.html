@@ -15,7 +15,7 @@
         <div>
             <table class="tabela center" >
     <div >
-        <tr class="espadas"><td><img id="espadabosta" class = " espada tabela" onclick="selecionarEspada('espadabosta')"  valor="2" src="imagens/itens/espadabosta.png"></td>
+        <tr class="espadas"><td><img id="espadabosta" class = " espada tabela" onclick="selecionarEspada('espadabosta')"  valor="1" src="imagens/itens/espadabosta.png"></td>
             <td ><img  id="espadaferro"  class = "espada tabela" onclick="selecionarEspada('espadaferro')" valor="4"   src="imagens/itens/espadaferro.png"></td>
             <td  ><img id="espadaouro" class = "espada tabela" onclick="selecionarEspada('espadaouro')" valor="8"  src="imagens/itens/espadaouro.png"></td></tr>
         </div>           
@@ -89,16 +89,21 @@ function randomInt(min, max) {
   }
 
   
-function criarInimigo(mob){
+function criarInimigo(mob, boss){
+   
     var inimigo = document.createElement("img");
 inimigo.setAttribute('src', "imagens/inimigos/"+mob);
 inimigo.setAttribute('height', '300px');
 inimigo.setAttribute('alt',mob);
 inimigo.setAttribute('id', 'atual');
+if(boss==1){
+inimigo.setAttribute('tipo','boss');
+}
 inimigo.setAttribute('class', 'relativa');
 inimigo.setAttribute('width', '300px');
 const divInimigo= document.getElementById('inimigo');
 divInimigo.appendChild(inimigo);
+
 }
 
 function criarRodada(nivel){
@@ -123,7 +128,9 @@ divDefender.classList.remove('hide');
    iniciar.classList.add('hide');
    criarRodada(nivel);
  
-   criarInimigo(rodada[etapa]);
+   var boss = randomInt(0,11);
+  
+   criarInimigo(rodada[etapa],boss);
    
    var inimigoAtual = document.getElementById('atual');
    var mobAtual = inimigoAtual.getAttribute('alt');
@@ -170,7 +177,7 @@ ataque = espadaAtual.getAttribute('valor');
 
     console.log(ataque);
 
-    if((escudo!=0)&&(ataque!=1)){
+    if((escudo!=0)&&(ataque!=0)){
         document.getElementById('jogo').classList.remove('hide');
         document.getElementById('inventario').classList.add('hide');
 
@@ -189,7 +196,7 @@ var escudoAtual = document.getElementById(valor);
 escudo = escudoAtual.getAttribute('valor');
 escudoAtual.classList.add('highlight');
 
-if((escudo!=0)&&(ataque!=1)){
+if((escudo!=0)&&(ataque!=0)){
    document.getElementById('jogo').classList.remove('hide');
    document.getElementById('inventario').classList.add('hide');
 }
@@ -266,12 +273,22 @@ function matar(){
 
     var inimigoAtual = document.getElementById('atual');
     divInimigo.removeChild(inimigoAtual);
-    
-    criarInimigo(rodada[etapa]);
+    var boss = randomInt(0,11);
+    criarInimigo(rodada[etapa],boss);
+   
     var inimigoAtual = document.getElementById('atual');
+    multiplicador = 1;
+    if(inimigoAtual.getAttribute('tipo')=="boss"){
+        
+        alert("boss");
+        multiplicador = randomInt(nivel,nivel*nivel);
+    }
     var mobAtual = inimigoAtual.getAttribute('alt');
  
-    var vidaInimigo = pegarVida(mobAtual);
+   
+    
+    
+    var vidaInimigo = pegarVida(mobAtual)+multiplicador;
     infoInimigo.innerHTML = "vida:"+vidaInimigo;
     nomeInimigo.innerHTML = "nome:"+mobAtual.replace('.png','');
 
@@ -290,6 +307,12 @@ function atacar(){
 
 
     var inimigoAtual = document.getElementById('atual');
+
+
+
+
+
+    console.log("multiplicador:"+multiplicador)
     var mobAtual = inimigoAtual.getAttribute('alt');
     var vidaInimigo = pegarVida(mobAtual);
     var danoDado = 0;
@@ -297,7 +320,8 @@ function atacar(){
     ataques++;
 
     danoDado= ataque * ataques;
-    var vidaAtualInimigo = vidaInimigo - danoDado;
+
+    var vidaAtualInimigo = vidaInimigo + multiplicador - danoDado;
    
     infoInimigo.innerHTML = "vida:"+vidaAtualInimigo;
 
@@ -308,7 +332,8 @@ function atacar(){
         matar();
         
     }
-    danoInimigo= randomInt(pegarDanoMinimo(mobAtual),pegarDanoMaximo(mobAtual));
+
+    danoInimigo= randomInt(pegarDanoMinimo(mobAtual),pegarDanoMaximo(mobAtual)) * multiplicador;
   
 
     if((defesa>0)&&(defesa!=null)){
@@ -319,7 +344,7 @@ function atacar(){
     }else{
         textoDefender.classList.add('hide');
 
-        vida = vida - danoInimigo;
+        vida = vida - danoInimigo ;
     }
     
 
@@ -388,7 +413,7 @@ const inimigos= { mobs:["goblin.png","orc.png","dragao.png","kevin.png","ogro.pn
  danomax:[3,5,6,21,5,2,50],
  vidas:[2,3,5,7,4,1,13]}
 
-const vidamaxima = 100;
+const vidamaxima = 1000;
 
 var vida = 100;
 
@@ -410,7 +435,7 @@ var ataque = 1;
 
 var rodada = [];
 
-
+var multiplicador = 1;
 
   
 // jogo 
